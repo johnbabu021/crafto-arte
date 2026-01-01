@@ -21,6 +21,11 @@ if (!customElements.get('product-form')) {
         evt.preventDefault();
         if (this.submitButton.getAttribute('aria-disabled') === 'true') return;
 
+        if (!this.form.checkValidity()) {
+          this.form.reportValidity();
+          return;
+        }
+
         this.handleErrorMessage();
 
         this.submitButton.setAttribute('aria-disabled', true);
@@ -32,6 +37,26 @@ if (!customElements.get('product-form')) {
         delete config.headers['Content-Type'];
 
         const formData = new FormData(this.form);
+
+        // Manual check for external form elements (in case FormData misses them or handling specific inputs)
+        if (this.form.id) {
+          const externalElements = document.querySelectorAll(`[form="${this.form.id}"]`);
+          externalElements.forEach((element) => {
+            if (!element.name || this.form.contains(element)) return;
+            if (element.disabled) return;
+            if ((element.type === 'checkbox' || element.type === 'radio') && !element.checked) return;
+
+            // Check if the key already exists to avoid duplication if browser handles it
+            // Note: getAll returns array, if we append it becomes array.
+            // Ideally we checking if the VALUE is there? No, just blindly appending might duplicate.
+            // But for properties, usually we want the value.
+            // Safe approach: Remove existing and append fresh from element? No.
+            // Let's assume FormData MIGHT miss it. If we append, and it turns out it was there, we get keys: "prop", "prop". 
+            // Shopify backend usually takes the last scalar.
+            formData.append(element.name, element.value);
+          });
+        }
+
         if (this.cart) {
           formData.append(
             'sections',

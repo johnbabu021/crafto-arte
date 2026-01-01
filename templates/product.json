@@ -45,6 +45,14 @@
             "show_gift_card_recipient": true
           }
         },
+        "custom_text_input": {
+          "type": "custom_text_input",
+          "settings": {
+            "label": "Custom Engraving",
+            "placeholder": "Enter your text here",
+            "required": false
+          }
+        },
         "description": {
           "type": "description",
           "settings": {}
@@ -63,6 +71,7 @@
         "variant_picker",
         "quantity_selector",
         "buy_buttons",
+        "custom_text_input",
         "description",
         "share"
       ],

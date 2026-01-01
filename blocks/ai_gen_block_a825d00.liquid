@@ -459,12 +459,6 @@
             {% endif %}
             <h3 class="ai-hamper-product-title-{{ ai_gen_id }}">{{ product.title }}</h3>
             <div class="ai-hamper-product-price-{{ ai_gen_id }}">{{ product.price | money }}</div>
-            <textarea
-              class="ai-hamper-customization-input-{{ ai_gen_id }}"
-              data-customization-input
-              placeholder="Add customization note (optional)"
-              rows="2"
-            ></textarea>
           </div>
         {% endfor %}
       {% else %}
@@ -521,12 +515,6 @@
             {% endif %}
             <h3 class="ai-hamper-product-title-{{ ai_gen_id }}">{{ product.title }}</h3>
             <div class="ai-hamper-product-price-{{ ai_gen_id }}">{{ product.price | money }}</div>
-            <textarea
-              class="ai-hamper-customization-input-{{ ai_gen_id }}"
-              data-customization-input
-              placeholder="Add customization note (optional)"
-              rows="2"
-            ></textarea>
           </div>
         {% endfor %}
       {% else %}
@@ -601,12 +589,6 @@
                 +
               </button>
             </div>
-            <textarea
-              class="ai-hamper-customization-input-{{ ai_gen_id }}"
-              data-customization-input
-              placeholder="Add customization note (optional)"
-              rows="2"
-            ></textarea>
           </div>
         {% endfor %}
       {% else %}
@@ -749,9 +731,6 @@
           id: card.dataset.productId,
           variantId: card.dataset.variantId,
           title: card.dataset.productTitle,
-          id: card.dataset.productId,
-          variantId: card.dataset.variantId,
-          title: card.dataset.productTitle,
           price: parseInt(card.dataset.productPrice)
         };
         
@@ -777,8 +756,7 @@
             title: card.dataset.productTitle,
             price: parseInt(card.dataset.productPrice),
             quantity: quantity,
-            customization: card.querySelector('[data-customization-input]')?.value || ''
-          };
+  			  };
           
           if (existingIndex > -1) {
             this.selections.addons[existingIndex] = addonData;

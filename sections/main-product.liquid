@@ -674,11 +674,24 @@
                 </product-recommendations>
               {%- when 'icon-with-text' -%}
                 {% render 'icon-with-text', block: block %}
+
               {%- when 'custom_text_input' -%}
                 <div class="product-form__input" {{ block.shopify_attributes }}>
                   <label class="form__label" for="Custom-{{ section.id }}-{{ block.id }}">
                     {{ block.settings.label | default: 'Customization' }}
                   </label>
+                  <style>
+                    #Custom-{{ section.id }}-{{ block.id }} {
+                      border: 0.1rem solid rgba(var(--color-foreground), 0.2);
+                      padding: 1.2rem;
+                      min-height: 10rem;
+                      resize: vertical;
+                    }
+                    #Custom-{{ section.id }}-{{ block.id }}::placeholder {
+                      opacity: 0.7;
+                      color: rgba(var(--color-foreground), 0.75);
+                    }
+                  </style>
                   <textarea
                     id="Custom-{{ section.id }}-{{ block.id }}"
                     class="text-area text-area--full-width field__input"
