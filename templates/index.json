@@ -209,7 +209,7 @@
       ],
       "name": "t:sections.image-banner.presets.name",
       "settings": {
-        "image": "shopify://shop_images/valentines-day-hamper-of-a-couple-propsing.png",
+        "image": "shopify://shop_images/Valentines_Day_Banner_Landscape.png",
         "image_overlay_opacity": 0,
         "image_height": "medium",
         "image_behavior": "none",
