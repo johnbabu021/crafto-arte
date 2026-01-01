@@ -1,0 +1,288 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "slideshow_bdDaMb": {
+      "type": "slideshow",
+      "blocks": {
+        "slide_G3LXBe": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/Untitled_design_2.png",
+            "image_overlay_opacity": 20,
+            "heading": "Gift Crafted with Love",
+            "heading_size": "h0",
+            "subheading": "Discover your enchanting Collection of Valentine's Day hampers ,curated to make your special someone feel cherished",
+            "button_label": "Build your own hamper",
+            "link": "shopify://pages/build-your-own-hamper",
+            "button_style_secondary": false,
+            "show_text_box": false,
+            "box_align": "bottom-left",
+            "text_alignment": "left",
+            "text_alignment_mobile": "center",
+            "color_scheme": "scheme-2"
+          }
+        },
+        "slide_7XmtLq": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/Untitled_design_1.png",
+            "image_overlay_opacity": 0,
+            "heading": "Gift For your loved Ones",
+            "heading_size": "h1",
+            "subheading": "We love your happiness",
+            "button_label": "Build your own hamper",
+            "link": "shopify://pages/build-your-own-hamper",
+            "button_style_secondary": false,
+            "show_text_box": false,
+            "box_align": "bottom-left",
+            "text_alignment": "left",
+            "text_alignment_mobile": "center",
+            "color_scheme": "scheme-2"
+          }
+        }
+      },
+      "block_order": [
+        "slide_G3LXBe",
+        "slide_7XmtLq"
+      ],
+      "custom_css": [
+        ".slideshow__controls {display: none;}"
+      ],
+      "name": "t:sections.slideshow.presets.name",
+      "settings": {
+        "layout": "full_bleed",
+        "slide_height": "medium",
+        "slider_visual": "dots",
+        "auto_rotate": true,
+        "change_slides_speed": 5,
+        "image_behavior": "none",
+        "show_text_below": true,
+        "accessibility_info": "Hero slideshow"
+      }
+    },
+    "collection_list_ARQYXF": {
+      "type": "collection-list",
+      "blocks": {
+        "featured_collection_HnraDW": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "romantic-hampers"
+          }
+        },
+        "featured_collection_bUgYpC": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "christmas-hampers"
+          }
+        },
+        "featured_collection_UpN9Pi": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "wedding-hampers"
+          }
+        }
+      },
+      "block_order": [
+        "featured_collection_HnraDW",
+        "featured_collection_bUgYpC",
+        "featured_collection_UpN9Pi"
+      ],
+      "name": "t:sections.collection-list.presets.name",
+      "settings": {
+        "title": "New Arrivals, New stories",
+        "heading_size": "h2",
+        "image_ratio": "portrait",
+        "columns_desktop": 3,
+        "color_scheme": "",
+        "show_view_all": false,
+        "columns_mobile": "1",
+        "swipe_on_mobile": false,
+        "padding_top": 20,
+        "padding_bottom": 36
+      }
+    },
+    "image_with_text_VNJewp": {
+      "type": "image-with-text",
+      "blocks": {
+        "heading_jcYkmT": {
+          "type": "heading",
+          "settings": {
+            "heading": "Pefect gift for you loving ones",
+            "heading_size": "h1"
+          }
+        },
+        "text_XqMzpm": {
+          "type": "text",
+          "settings": {
+            "text": "<p>This section  gives you the best  gifts you can gift for you loved ones</p>",
+            "text_style": "body"
+          }
+        },
+        "button_XWJqji": {
+          "type": "button",
+          "settings": {
+            "button_label": "Shop Now",
+            "button_link": "shopify://collections/romantic-hampers",
+            "button_style_secondary": false
+          }
+        }
+      },
+      "block_order": [
+        "heading_jcYkmT",
+        "text_XqMzpm",
+        "button_XWJqji"
+      ],
+      "name": "t:sections.image-with-text.presets.name",
+      "settings": {
+        "image": "shopify://shop_images/wedding-hampers.png",
+        "height": "adapt",
+        "desktop_image_width": "medium",
+        "layout": "text_first",
+        "image_behavior": "zoom-in",
+        "content_layout": "no-overlap",
+        "desktop_content_position": "top",
+        "desktop_content_alignment": "left",
+        "mobile_content_alignment": "left",
+        "section_color_scheme": "scheme-2",
+        "color_scheme": "scheme-2",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "featured_collection": {
+      "type": "featured-collection",
+      "settings": {
+        "collection": "valentines-collection",
+        "products_to_show": 8,
+        "title": "New In Valentines",
+        "heading_size": "h2",
+        "description": "",
+        "show_description": false,
+        "description_style": "body",
+        "columns_desktop": 4,
+        "enable_desktop_slider": false,
+        "full_width": false,
+        "show_view_all": true,
+        "view_all_style": "solid",
+        "color_scheme": "scheme-1",
+        "image_ratio": "adapt",
+        "image_shape": "default",
+        "show_secondary_image": true,
+        "show_vendor": false,
+        "show_rating": false,
+        "quick_add": "none",
+        "columns_mobile": "1",
+        "swipe_on_mobile": false,
+        "padding_top": 44,
+        "padding_bottom": 36
+      }
+    },
+    "image_banner_gt9eP3": {
+      "type": "image-banner",
+      "blocks": {
+        "heading_F9z7ha": {
+          "type": "heading",
+          "settings": {
+            "heading": "",
+            "heading_size": "h1"
+          }
+        },
+        "text_VnHmkH": {
+          "type": "text",
+          "settings": {
+            "text": "",
+            "text_style": "body"
+          }
+        }
+      },
+      "block_order": [
+        "heading_F9z7ha",
+        "text_VnHmkH"
+      ],
+      "name": "t:sections.image-banner.presets.name",
+      "settings": {
+        "image": "shopify://shop_images/valentines-day-hamper-of-a-couple-propsing.png",
+        "image_overlay_opacity": 0,
+        "image_height": "medium",
+        "image_behavior": "none",
+        "desktop_content_position": "bottom-left",
+        "desktop_content_alignment": "left",
+        "show_text_box": false,
+        "color_scheme": "scheme-2",
+        "stack_images_on_mobile": true,
+        "mobile_content_alignment": "center",
+        "show_text_below": true
+      }
+    },
+    "17659912104235d4a4": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_a825d00_7xJGzx": {
+          "type": "ai_gen_block_a825d00",
+          "settings": {
+            "max_width": 1200,
+            "padding": 40,
+            "desktop_width_percent": 100,
+            "background_color": "#ffffff",
+            "text_color": "#121212",
+            "price_color": "#121212",
+            "progress_active_color": "#121212",
+            "progress_active_text_color": "#ffffff",
+            "progress_inactive_color": "#e0e0e0",
+            "step1_label": "Base",
+            "step1_title": "Choose Your Base",
+            "step1_description": "Select the foundation for your custom hamper",
+            "step2_label": "Package",
+            "step2_title": "Choose Your Package",
+            "step2_description": "Select the perfect packaging for your hamper",
+            "step3_label": "Add-ons",
+            "step3_title": "Add Extra Items",
+            "step3_description": "Customize your hamper with additional items",
+            "card_min_width": 220,
+            "grid_gap": 24,
+            "card_background": "#ffffff",
+            "card_border_color": "#e0e0e0",
+            "card_hover_border_color": "#121212",
+            "card_selected_border_color": "#121212",
+            "card_selected_background": "#f9f9f9",
+            "card_border_radius": 8,
+            "image_border_radius": 4,
+            "checkmark_background": "#121212",
+            "button_background": "#121212",
+            "button_text_color": "#ffffff",
+            "button_hover_background": "#000000",
+            "button_border_radius": 4,
+            "summary_background": "#f9f9f9",
+            "step_title_size": 32
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_a825d00_7xJGzx"
+      ],
+      "settings": {}
+    },
+    "17660591753c180e53": {
+      "type": "_blocks",
+      "settings": {}
+    }
+  },
+  "order": [
+    "slideshow_bdDaMb",
+    "collection_list_ARQYXF",
+    "image_with_text_VNJewp",
+    "featured_collection",
+    "image_banner_gt9eP3",
+    "17659912104235d4a4",
+    "17660591753c180e53"
+  ]
+}

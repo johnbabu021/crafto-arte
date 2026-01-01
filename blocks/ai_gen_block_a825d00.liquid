@@ -1,0 +1,1265 @@
+{% doc %}
+  @prompt
+    Create a multi-step hamper builder with three sections:
+    
+    Step 1 - Base Selection: Display all products with product type "base" as selectable cards. User must select one base product.
+    
+    Step 2 - Package Selection: Display all products with product type "package" as selectable cards. User must select one package product.
+    
+    Step 3 - Add-ons Selection: Display all products with product type "addon" as selectable cards with quantity selectors (+ and - buttons). User can select multiple add-ons with different quantities.
+    
+    Requirements:
+    - Show product images, titles, and prices for each product
+    - Visual indication of selected products (highlight or checkmark)
+    - "Continue" button between steps that only appears when required selection is made
+    - Quantity selector buttons (+ and -) for add-ons with current quantity displayed
+    - "Add to Cart" button at the end that adds all selected products (base + package + add-ons) to cart
+    - Progress indicator showing current step
+    - Clean, premium design matching a luxury gift hamper aesthetic
+    - Mobile responsive layout
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-hamper-builder-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    max-width: {{ block.settings.max_width }}px;
+    margin: 0 auto;
+    padding: {{ block.settings.padding }}px;
+    background-color: {{ block.settings.background_color }};
+  }
+
+  .ai-hamper-progress-{{ ai_gen_id }} {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+    position: relative;
+  }
+
+  .ai-hamper-progress-line-{{ ai_gen_id }} {
+    position: absolute;
+    top: 20px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: {{ block.settings.progress_inactive_color }};
+    z-index: 0;
+  }
+
+  .ai-hamper-progress-fill-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: {{ block.settings.progress_active_color }};
+    transition: width 0.3s ease;
+  }
+
+  .ai-hamper-progress-step-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+    z-index: 1;
+    flex: 1;
+  }
+
+  .ai-hamper-progress-circle-{{ ai_gen_id }} {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: {{ block.settings.progress_inactive_color }};
+    color: {{ block.settings.text_color }};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .ai-hamper-progress-step-{{ ai_gen_id }}.active .ai-hamper-progress-circle-{{ ai_gen_id }} {
+    background-color: {{ block.settings.progress_active_color }};
+    color: {{ block.settings.progress_active_text_color }};
+  }
+
+  .ai-hamper-progress-step-{{ ai_gen_id }}.completed .ai-hamper-progress-circle-{{ ai_gen_id }} {
+    background-color: {{ block.settings.progress_active_color }};
+    color: {{ block.settings.progress_active_text_color }};
+  }
+
+  .ai-hamper-progress-label-{{ ai_gen_id }} {
+    font-size: 14px;
+    color: {{ block.settings.text_color }};
+    text-align: center;
+  }
+
+  .ai-hamper-step-{{ ai_gen_id }} {
+    display: none;
+  }
+
+  .ai-hamper-step-{{ ai_gen_id }}.active {
+    display: block;
+  }
+
+  .ai-hamper-step-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.step_title_size }}px;
+    color: {{ block.settings.text_color }};
+    margin-bottom: 12px;
+    font-weight: 600;
+  }
+
+  .ai-hamper-step-description-{{ ai_gen_id }} {
+    font-size: 16px;
+    color: {{ block.settings.text_color }};
+    margin-bottom: 32px;
+    opacity: 0.8;
+  }
+
+  .ai-hamper-products-grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax({{ block.settings.card_min_width }}px, 1fr));
+    gap: {{ block.settings.grid_gap }}px;
+    margin-bottom: 32px;
+  }
+
+  .ai-hamper-product-card-{{ ai_gen_id }} {
+    border: 2px solid {{ block.settings.card_border_color }};
+    border-radius: {{ block.settings.card_border_radius }}px;
+    padding: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: {{ block.settings.card_background }};
+    position: relative;
+  }
+
+  .ai-hamper-product-card-{{ ai_gen_id }}:hover {
+    border-color: {{ block.settings.card_hover_border_color }};
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .ai-hamper-product-card-{{ ai_gen_id }}.selected {
+    border-color: {{ block.settings.card_selected_border_color }};
+    background-color: {{ block.settings.card_selected_background }};
+  }
+
+  .ai-hamper-product-checkmark-{{ ai_gen_id }} {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background-color: {{ block.settings.checkmark_background }};
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-hamper-product-card-{{ ai_gen_id }}.selected .ai-hamper-product-checkmark-{{ ai_gen_id }} {
+    display: flex;
+  }
+
+  .ai-hamper-product-image-{{ ai_gen_id }} {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: {{ block.settings.image_border_radius }}px;
+    margin-bottom: 12px;
+  }
+
+  .ai-hamper-product-image-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    aspect-ratio: 1;
+    background-color: #f4f4f4;
+    border-radius: {{ block.settings.image_border_radius }}px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-hamper-product-image-placeholder-{{ ai_gen_id }} svg {
+    width: 60%;
+    height: 60%;
+  }
+
+  .ai-hamper-product-title-{{ ai_gen_id }} {
+    font-size: 16px;
+    font-weight: 600;
+    color: {{ block.settings.text_color }};
+    margin-bottom: 8px;
+  }
+
+  .ai-hamper-product-price-{{ ai_gen_id }} {
+    font-size: 18px;
+    font-weight: 700;
+    color: {{ block.settings.price_color }};
+    margin-bottom: 12px;
+  }
+
+  .ai-hamper-quantity-controls-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 12px;
+  }
+
+  .ai-hamper-quantity-btn-{{ ai_gen_id }} {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid {{ block.settings.button_background }};
+    background-color: transparent;
+    color: {{ block.settings.button_background }};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  .ai-hamper-quantity-btn-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.button_background }};
+    color: {{ block.settings.button_text_color }};
+  }
+
+  .ai-hamper-quantity-btn-{{ ai_gen_id }}:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  .ai-hamper-quantity-display-{{ ai_gen_id }} {
+    font-size: 18px;
+    font-weight: 600;
+    color: {{ block.settings.text_color }};
+    min-width: 30px;
+    text-align: center;
+  }
+
+  .ai-hamper-actions-{{ ai_gen_id }} {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    margin-top: 32px;
+  }
+
+  .ai-hamper-btn-{{ ai_gen_id }} {
+    padding: 16px 40px;
+    border-radius: {{ block.settings.button_border_radius }}px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+  }
+
+  .ai-hamper-btn-primary-{{ ai_gen_id }} {
+    background-color: {{ block.settings.button_background }};
+    color: {{ block.settings.button_text_color }};
+  }
+
+  .ai-hamper-btn-primary-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.button_hover_background }};
+    opacity: 0.9;
+  }
+
+  .ai-hamper-btn-primary-{{ ai_gen_id }}:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .ai-hamper-btn-secondary-{{ ai_gen_id }} {
+    background-color: transparent;
+    color: {{ block.settings.text_color }};
+    border: 2px solid {{ block.settings.text_color }};
+  }
+
+  .ai-hamper-btn-secondary-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.text_color }};
+    color: {{ block.settings.background_color }};
+  }
+
+  .ai-hamper-summary-{{ ai_gen_id }} {
+    background-color: {{ block.settings.summary_background }};
+    border-radius: {{ block.settings.card_border_radius }}px;
+    padding: 24px;
+    margin-bottom: 32px;
+  }
+
+  .ai-hamper-summary-title-{{ ai_gen_id }} {
+    font-size: 20px;
+    font-weight: 600;
+    color: {{ block.settings.text_color }};
+    margin-bottom: 16px;
+  }
+
+  .ai-hamper-summary-item-{{ ai_gen_id }} {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid {{ block.settings.card_border_color }};
+  }
+
+  .ai-hamper-summary-item-{{ ai_gen_id }}:last-child {
+    border-bottom: none;
+  }
+
+  .ai-hamper-summary-item-name-{{ ai_gen_id }} {
+    font-size: 14px;
+    color: {{ block.settings.text_color }};
+  }
+
+  .ai-hamper-summary-item-price-{{ ai_gen_id }} {
+    font-size: 14px;
+    font-weight: 600;
+    color: {{ block.settings.text_color }};
+  }
+
+  .ai-hamper-summary-total-{{ ai_gen_id }} {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 16px;
+    margin-top: 16px;
+    border-top: 2px solid {{ block.settings.text_color }};
+  }
+
+  .ai-hamper-summary-total-label-{{ ai_gen_id }} {
+    font-size: 18px;
+    font-weight: 700;
+    color: {{ block.settings.text_color }};
+  }
+
+  .ai-hamper-summary-total-price-{{ ai_gen_id }} {
+    font-size: 24px;
+    font-weight: 700;
+    color: {{ block.settings.price_color }};
+  }
+
+  .ai-hamper-empty-state-{{ ai_gen_id }} {
+    text-align: center;
+    padding: 40px;
+    color: {{ block.settings.text_color }};
+    opacity: 0.6;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-hamper-builder-{{ ai_gen_id }} {
+      padding: 20px;
+    }
+
+    .ai-hamper-products-grid-{{ ai_gen_id }} {
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 16px;
+    }
+
+    .ai-hamper-progress-label-{{ ai_gen_id }} {
+      font-size: 12px;
+    }
+
+    .ai-hamper-progress-circle-{{ ai_gen_id }} {
+      width: 32px;
+      height: 32px;
+      font-size: 14px;
+    }
+
+    .ai-hamper-step-title-{{ ai_gen_id }} {
+      font-size: 24px;
+    }
+
+    .ai-hamper-actions-{{ ai_gen_id }} {
+      flex-direction: column;
+    }
+
+    .ai-hamper-btn-{{ ai_gen_id }} {
+      width: 100%;
+    }
+  }
+
+  .ai-hamper-customization-input-{{ ai_gen_id }} {
+    width: 100%;
+    margin-top: 12px;
+    padding: 8px;
+    border: 1px solid {{ block.settings.card_border_color }};
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 14px;
+    resize: vertical;
+    display: none;
+  }
+
+  .ai-hamper-product-card-{{ ai_gen_id }}.selected .ai-hamper-customization-input-{{ ai_gen_id }} {
+    display: block;
+  }
+{% endstyle %}
+
+<hamper-builder-{{ ai_gen_id }}
+  class="ai-hamper-builder-{{ ai_gen_id }}"
+  {{ block.shopify_attributes }}
+>
+  <div class="ai-hamper-progress-{{ ai_gen_id }}">
+    <div class="ai-hamper-progress-line-{{ ai_gen_id }}">
+      <div class="ai-hamper-progress-fill-{{ ai_gen_id }}" data-progress-fill></div>
+    </div>
+    <div class="ai-hamper-progress-step-{{ ai_gen_id }} active" data-step-indicator="1">
+      <div class="ai-hamper-progress-circle-{{ ai_gen_id }}">1</div>
+      <div class="ai-hamper-progress-label-{{ ai_gen_id }}">{{ block.settings.step1_label }}</div>
+    </div>
+    <div class="ai-hamper-progress-step-{{ ai_gen_id }}" data-step-indicator="2">
+      <div class="ai-hamper-progress-circle-{{ ai_gen_id }}">2</div>
+      <div class="ai-hamper-progress-label-{{ ai_gen_id }}">{{ block.settings.step2_label }}</div>
+    </div>
+    <div class="ai-hamper-progress-step-{{ ai_gen_id }}" data-step-indicator="3">
+      <div class="ai-hamper-progress-circle-{{ ai_gen_id }}">3</div>
+      <div class="ai-hamper-progress-label-{{ ai_gen_id }}">{{ block.settings.step3_label }}</div>
+    </div>
+  </div>
+
+  <div class="ai-hamper-step-{{ ai_gen_id }} active" data-step="1">
+    <h2 class="ai-hamper-step-title-{{ ai_gen_id }}">{{ block.settings.step1_title }}</h2>
+    <p class="ai-hamper-step-description-{{ ai_gen_id }}">{{ block.settings.step1_description }}</p>
+
+    <div class="ai-hamper-products-grid-{{ ai_gen_id }}" data-product-grid="base">
+      {% assign base_products = collections.all.products | where: 'type', 'base' %}
+      {% if base_products.size > 0 %}
+        {% for product in base_products %}
+          <div
+            class="ai-hamper-product-card-{{ ai_gen_id }}"
+            data-product-card
+            data-product-id="{{ product.id }}"
+            data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+            data-product-title="{{ product.title | escape }}"
+            data-product-price="{{ product.price }}"
+            data-product-type="base"
+          >
+            <div class="ai-hamper-product-checkmark-{{ ai_gen_id }}">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M13.3333 4L6 11.3333L2.66667 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            {% if product.featured_image %}
+              <img
+                src="{{ product.featured_image | image_url: width: 400 }}"
+                alt="{{ product.featured_image.alt | escape }}"
+                class="ai-hamper-product-image-{{ ai_gen_id }}"
+                loading="lazy"
+              >
+            {% else %}
+              <div class="ai-hamper-product-image-placeholder-{{ ai_gen_id }}">
+                {{ 'product-1' | placeholder_svg_tag }}
+              </div>
+            {% endif %}
+            <h3 class="ai-hamper-product-title-{{ ai_gen_id }}">{{ product.title }}</h3>
+            <div class="ai-hamper-product-price-{{ ai_gen_id }}">{{ product.price | money }}</div>
+            <textarea
+              class="ai-hamper-customization-input-{{ ai_gen_id }}"
+              data-customization-input
+              placeholder="Add customization note (optional)"
+              rows="2"
+            ></textarea>
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="ai-hamper-empty-state-{{ ai_gen_id }}">
+          No base products found. Please add products with type "base" to your store.
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="ai-hamper-actions-{{ ai_gen_id }}">
+      <button
+        class="ai-hamper-btn-{{ ai_gen_id }} ai-hamper-btn-primary-{{ ai_gen_id }}"
+        data-continue-btn
+        disabled
+      >
+        Continue to Package Selection
+      </button>
+    </div>
+  </div>
+
+  <div class="ai-hamper-step-{{ ai_gen_id }}" data-step="2">
+    <h2 class="ai-hamper-step-title-{{ ai_gen_id }}">{{ block.settings.step2_title }}</h2>
+    <p class="ai-hamper-step-description-{{ ai_gen_id }}">{{ block.settings.step2_description }}</p>
+
+    <div class="ai-hamper-products-grid-{{ ai_gen_id }}" data-product-grid="package">
+      {% assign package_products = collections.all.products | where: 'type', 'package' %}
+      {% if package_products.size > 0 %}
+        {% for product in package_products %}
+          <div
+            class="ai-hamper-product-card-{{ ai_gen_id }}"
+            data-product-card
+            data-product-id="{{ product.id }}"
+            data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+            data-product-title="{{ product.title | escape }}"
+            data-product-price="{{ product.price }}"
+            data-product-type="package"
+          >
+            <div class="ai-hamper-product-checkmark-{{ ai_gen_id }}">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M13.3333 4L6 11.3333L2.66667 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            {% if product.featured_image %}
+              <img
+                src="{{ product.featured_image | image_url: width: 400 }}"
+                alt="{{ product.featured_image.alt | escape }}"
+                class="ai-hamper-product-image-{{ ai_gen_id }}"
+                loading="lazy"
+              >
+            {% else %}
+              <div class="ai-hamper-product-image-placeholder-{{ ai_gen_id }}">
+                {{ 'product-1' | placeholder_svg_tag }}
+              </div>
+            {% endif %}
+            <h3 class="ai-hamper-product-title-{{ ai_gen_id }}">{{ product.title }}</h3>
+            <div class="ai-hamper-product-price-{{ ai_gen_id }}">{{ product.price | money }}</div>
+            <textarea
+              class="ai-hamper-customization-input-{{ ai_gen_id }}"
+              data-customization-input
+              placeholder="Add customization note (optional)"
+              rows="2"
+            ></textarea>
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="ai-hamper-empty-state-{{ ai_gen_id }}">
+          No package products found. Please add products with type "package" to your store.
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="ai-hamper-actions-{{ ai_gen_id }}">
+      <button
+        class="ai-hamper-btn-{{ ai_gen_id }} ai-hamper-btn-secondary-{{ ai_gen_id }}"
+        data-back-btn
+      >
+        Back
+      </button>
+      <button
+        class="ai-hamper-btn-{{ ai_gen_id }} ai-hamper-btn-primary-{{ ai_gen_id }}"
+        data-continue-btn
+        disabled
+      >
+        Continue to Add-ons
+      </button>
+    </div>
+  </div>
+
+  <div class="ai-hamper-step-{{ ai_gen_id }}" data-step="3">
+    <h2 class="ai-hamper-step-title-{{ ai_gen_id }}">{{ block.settings.step3_title }}</h2>
+    <p class="ai-hamper-step-description-{{ ai_gen_id }}">{{ block.settings.step3_description }}</p>
+
+    <div class="ai-hamper-products-grid-{{ ai_gen_id }}" data-product-grid="addon">
+      {% assign addon_products = collections.all.products | where: 'type', 'addon' %}
+      {% if addon_products.size > 0 %}
+        {% for product in addon_products %}
+          <div
+            class="ai-hamper-product-card-{{ ai_gen_id }}"
+            data-product-card
+            data-product-id="{{ product.id }}"
+            data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+            data-product-title="{{ product.title | escape }}"
+            data-product-price="{{ product.price }}"
+            data-product-type="addon"
+          >
+            {% if product.featured_image %}
+              <img
+                src="{{ product.featured_image | image_url: width: 400 }}"
+                alt="{{ product.featured_image.alt | escape }}"
+                class="ai-hamper-product-image-{{ ai_gen_id }}"
+                loading="lazy"
+              >
+            {% else %}
+              <div class="ai-hamper-product-image-placeholder-{{ ai_gen_id }}">
+                {{ 'product-1' | placeholder_svg_tag }}
+              </div>
+            {% endif %}
+            <h3 class="ai-hamper-product-title-{{ ai_gen_id }}">{{ product.title }}</h3>
+            <div class="ai-hamper-product-price-{{ ai_gen_id }}">{{ product.price | money }}</div>
+
+            <div class="ai-hamper-quantity-controls-{{ ai_gen_id }}">
+              <button
+                class="ai-hamper-quantity-btn-{{ ai_gen_id }}"
+                data-quantity-decrease
+                disabled
+              >
+                −
+              </button>
+              <span class="ai-hamper-quantity-display-{{ ai_gen_id }}" data-quantity-display>0</span>
+              <button
+                class="ai-hamper-quantity-btn-{{ ai_gen_id }}"
+                data-quantity-increase
+              >
+                +
+              </button>
+            </div>
+            <textarea
+              class="ai-hamper-customization-input-{{ ai_gen_id }}"
+              data-customization-input
+              placeholder="Add customization note (optional)"
+              rows="2"
+            ></textarea>
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="ai-hamper-empty-state-{{ ai_gen_id }}">
+          No add-on products found. Please add products with type "addon" to your store.
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="ai-hamper-summary-{{ ai_gen_id }}" data-summary></div>
+
+    <div class="ai-hamper-actions-{{ ai_gen_id }}">
+      <button
+        class="ai-hamper-btn-{{ ai_gen_id }} ai-hamper-btn-secondary-{{ ai_gen_id }}"
+        data-back-btn
+      >
+        Back
+      </button>
+      <button
+        class="ai-hamper-btn-{{ ai_gen_id }} ai-hamper-btn-primary-{{ ai_gen_id }}"
+        data-add-to-cart-btn
+      >
+        Add to Cart
+      </button>
+    </div>
+  </div>
+</hamper-builder-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class HamperBuilder{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.currentStep = 1;
+        this.selections = {
+          base: null,
+          package: null,
+          addons: []
+        };
+      }
+
+      connectedCallback() {
+        this.steps = this.querySelectorAll('[data-step]');
+        this.stepIndicators = this.querySelectorAll('[data-step-indicator]');
+        this.progressFill = this.querySelector('[data-progress-fill]');
+        this.continueButtons = this.querySelectorAll('[data-continue-btn]');
+        this.backButtons = this.querySelectorAll('[data-back-btn]');
+        this.addToCartButton = this.querySelector('[data-add-to-cart-btn]');
+        
+        this.setupEventListeners();
+        this.updateProgressBar();
+      }
+
+      setupEventListeners() {
+        this.querySelectorAll('[data-product-card]').forEach(card => {
+          const productType = card.dataset.productType;
+          
+          if (productType === 'addon') {
+            const increaseBtn = card.querySelector('[data-quantity-increase]');
+            const decreaseBtn = card.querySelector('[data-quantity-decrease]');
+            const display = card.querySelector('[data-quantity-display]');
+            
+            increaseBtn.addEventListener('click', () => {
+              let quantity = parseInt(display.textContent);
+              quantity++;
+              display.textContent = quantity;
+              decreaseBtn.disabled = false;
+              
+              if (quantity > 0) {
+                card.classList.add('selected');
+              }
+              
+              this.updateAddonSelection(card, quantity);
+              this.updateAddonSelection(card, quantity);
+              this.updateSummary();
+            });
+
+            const customInput = card.querySelector('[data-customization-input]');
+            if (customInput) {
+                customInput.addEventListener('input', (e) => {
+                    const quantity = parseInt(display.textContent);
+                    if (quantity > 0) {
+                        this.updateAddonSelection(card, quantity);
+                    }
+                });
+            }
+            
+            decreaseBtn.addEventListener('click', () => {
+              let quantity = parseInt(display.textContent);
+              if (quantity > 0) {
+                quantity--;
+                display.textContent = quantity;
+                
+                if (quantity === 0) {
+                  decreaseBtn.disabled = true;
+                  card.classList.remove('selected');
+                }
+                
+                this.updateAddonSelection(card, quantity);
+                this.updateSummary();
+              }
+            });
+          } else {
+            card.addEventListener('click', () => {
+              this.handleProductSelection(card, productType);
+            });
+            
+            const customInput = card.querySelector('[data-customization-input]');
+             if (customInput) {
+                customInput.addEventListener('input', (e) => {
+                    if (card.classList.contains('selected')) {
+                        this.handleProductSelection(card, productType);
+                    }
+                });
+             }
+          }
+        });
+
+        this.continueButtons.forEach(btn => {
+          btn.addEventListener('click', () => {
+            this.nextStep();
+          });
+        });
+
+        this.backButtons.forEach(btn => {
+          btn.addEventListener('click', () => {
+            this.previousStep();
+          });
+        });
+
+        if (this.addToCartButton) {
+          this.addToCartButton.addEventListener('click', () => {
+            this.addToCart();
+          });
+        }
+      }
+
+      handleProductSelection(card, productType) {
+        const grid = card.closest('[data-product-grid]');
+        grid.querySelectorAll('[data-product-card]').forEach(c => {
+          c.classList.remove('selected');
+        });
+        
+        card.classList.add('selected');
+        
+        this.selections[productType] = {
+          id: card.dataset.productId,
+          variantId: card.dataset.variantId,
+          title: card.dataset.productTitle,
+          id: card.dataset.productId,
+          variantId: card.dataset.variantId,
+          title: card.dataset.productTitle,
+          price: parseInt(card.dataset.productPrice),
+          customization: card.querySelector('[data-customization-input]')?.value || ''
+        };
+        
+        const continueBtn = this.steps[this.currentStep - 1].querySelector('[data-continue-btn]');
+        if (continueBtn) {
+          continueBtn.disabled = false;
+        }
+      }
+
+      updateAddonSelection(card, quantity) {
+        const existingIndex = this.selections.addons.findIndex(
+          addon => addon.variantId === card.dataset.variantId
+        );
+        
+        if (quantity === 0) {
+          if (existingIndex > -1) {
+            this.selections.addons.splice(existingIndex, 1);
+          }
+        } else {
+          const addonData = {
+            id: card.dataset.productId,
+            variantId: card.dataset.variantId,
+            title: card.dataset.productTitle,
+            price: parseInt(card.dataset.productPrice),
+            quantity: quantity,
+            customization: card.querySelector('[data-customization-input]')?.value || ''
+          };
+          };
+          
+          if (existingIndex > -1) {
+            this.selections.addons[existingIndex] = addonData;
+          } else {
+            this.selections.addons.push(addonData);
+          }
+        }
+      }
+
+      updateSummary() {
+        const summaryContainer = this.querySelector('[data-summary]');
+        if (!summaryContainer) return;
+        
+        let html = '<div class="ai-hamper-summary-title-{{ ai_gen_id }}">Your Hamper Summary</div>';
+        let total = 0;
+        
+        if (this.selections.base) {
+          html += `
+            <div class="ai-hamper-summary-item-{{ ai_gen_id }}">
+              <span class="ai-hamper-summary-item-name-{{ ai_gen_id }}">${this.selections.base.title}</span>
+              <span class="ai-hamper-summary-item-price-{{ ai_gen_id }}">${this.formatMoney(this.selections.base.price)}</span>
+            </div>
+          `;
+          total += this.selections.base.price;
+        }
+        
+        if (this.selections.package) {
+          html += `
+            <div class="ai-hamper-summary-item-{{ ai_gen_id }}">
+              <span class="ai-hamper-summary-item-name-{{ ai_gen_id }}">${this.selections.package.title}</span>
+              <span class="ai-hamper-summary-item-price-{{ ai_gen_id }}">${this.formatMoney(this.selections.package.price)}</span>
+            </div>
+          `;
+          total += this.selections.package.price;
+        }
+        
+        this.selections.addons.forEach(addon => {
+          const itemTotal = addon.price * addon.quantity;
+          html += `
+            <div class="ai-hamper-summary-item-{{ ai_gen_id }}">
+              <span class="ai-hamper-summary-item-name-{{ ai_gen_id }}">${addon.title} × ${addon.quantity}</span>
+              <span class="ai-hamper-summary-item-price-{{ ai_gen_id }}">${this.formatMoney(itemTotal)}</span>
+            </div>
+          `;
+          total += itemTotal;
+        });
+        
+        html += `
+          <div class="ai-hamper-summary-total-{{ ai_gen_id }}">
+            <span class="ai-hamper-summary-total-label-{{ ai_gen_id }}">Total</span>
+            <span class="ai-hamper-summary-total-price-{{ ai_gen_id }}">${this.formatMoney(total)}</span>
+          </div>
+        `;
+        
+        summaryContainer.innerHTML = html;
+      }
+
+      formatMoney(cents) {
+        return (cents / 100).toLocaleString('en-IN', {
+          style: 'currency',
+          currency: 'INR'
+        });
+      }
+
+      nextStep() {
+        if (this.currentStep < 3) {
+          this.currentStep++;
+          this.updateStepDisplay();
+          this.updateProgressBar();
+          
+          if (this.currentStep === 3) {
+            this.updateSummary();
+          }
+        }
+      }
+
+      previousStep() {
+        if (this.currentStep > 1) {
+          this.currentStep--;
+          this.updateStepDisplay();
+          this.updateProgressBar();
+        }
+      }
+
+      updateStepDisplay() {
+        this.steps.forEach((step, index) => {
+          if (index + 1 === this.currentStep) {
+            step.classList.add('active');
+          } else {
+            step.classList.remove('active');
+          }
+        });
+
+        this.stepIndicators.forEach((indicator, index) => {
+          const stepNum = index + 1;
+          indicator.classList.remove('active', 'completed');
+          
+          if (stepNum === this.currentStep) {
+            indicator.classList.add('active');
+          } else if (stepNum < this.currentStep) {
+            indicator.classList.add('completed');
+          }
+        });
+      }
+
+      updateProgressBar() {
+        const progress = ((this.currentStep - 1) / 2) * 100;
+        this.progressFill.style.width = progress + '%';
+      }
+
+      async addToCart() {
+        const items = [];
+        
+        const hamperId = Date.now().toString();
+        
+        if (this.selections.base) {
+          items.push({
+            id: this.selections.base.variantId,
+            quantity: 1,
+            properties: {
+              'Hamper ID': hamperId,
+              'Customization': this.selections.base.customization
+            }
+          });
+        }
+        
+        if (this.selections.package) {
+          items.push({
+            id: this.selections.package.variantId,
+            quantity: 1,
+            properties: {
+              'Hamper ID': hamperId,
+              'Customization': this.selections.package.customization
+            }
+          });
+        }
+        
+        this.selections.addons.forEach(addon => {
+          items.push({
+            id: addon.variantId,
+            quantity: addon.quantity,
+            properties: {
+              'Hamper ID': hamperId,
+              'Customization': addon.customization
+            }
+          });
+        });
+        
+        if (items.length === 0) {
+          alert('Please select at least one product');
+          return;
+        }
+        
+        this.addToCartButton.disabled = true;
+        this.addToCartButton.textContent = 'Adding to Cart...';
+        
+        try {
+          const response = await fetch('/cart/add.js', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ items })
+          });
+          
+          if (response.ok) {
+            window.location.href = '/cart';
+          } else {
+            throw new Error('Failed to add to cart');
+          }
+        } catch (error) {
+          alert('Error adding to cart. Please try again.');
+          this.addToCartButton.disabled = false;
+          this.addToCartButton.textContent = 'Add to Cart';
+        }
+      }
+    }
+
+    customElements.define('hamper-builder-{{ ai_gen_id }}', HamperBuilder{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Hamper builder",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "min": 800,
+      "max": 1400,
+      "step": 50,
+      "unit": "px",
+      "label": "Maximum width",
+      "default": 1200
+    },
+    {
+      "type": "range",
+      "id": "padding",
+      "min": 20,
+      "max": 80,
+      "step": 10,
+      "unit": "px",
+      "label": "Padding",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#121212"
+    },
+    {
+      "type": "color",
+      "id": "price_color",
+      "label": "Price",
+      "default": "#121212"
+    },
+    {
+      "type": "header",
+      "content": "Progress indicator"
+    },
+    {
+      "type": "color",
+      "id": "progress_active_color",
+      "label": "Active color",
+      "default": "#121212"
+    },
+    {
+      "type": "color",
+      "id": "progress_active_text_color",
+      "label": "Active text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "progress_inactive_color",
+      "label": "Inactive color",
+      "default": "#e0e0e0"
+    },
+    {
+      "type": "header",
+      "content": "Step 1 - Base selection"
+    },
+    {
+      "type": "text",
+      "id": "step1_label",
+      "label": "Progress label",
+      "default": "Base"
+    },
+    {
+      "type": "text",
+      "id": "step1_title",
+      "label": "Title",
+      "default": "Choose Your Base"
+    },
+    {
+      "type": "text",
+      "id": "step1_description",
+      "label": "Description",
+      "default": "Select the foundation for your custom hamper"
+    },
+    {
+      "type": "header",
+      "content": "Step 2 - Package selection"
+    },
+    {
+      "type": "text",
+      "id": "step2_label",
+      "label": "Progress label",
+      "default": "Package"
+    },
+    {
+      "type": "text",
+      "id": "step2_title",
+      "label": "Title",
+      "default": "Choose Your Package"
+    },
+    {
+      "type": "text",
+      "id": "step2_description",
+      "label": "Description",
+      "default": "Select the perfect packaging for your hamper"
+    },
+    {
+      "type": "header",
+      "content": "Step 3 - Add-ons selection"
+    },
+    {
+      "type": "text",
+      "id": "step3_label",
+      "label": "Progress label",
+      "default": "Add-ons"
+    },
+    {
+      "type": "text",
+      "id": "step3_title",
+      "label": "Title",
+      "default": "Add Extra Items"
+    },
+    {
+      "type": "text",
+      "id": "step3_description",
+      "label": "Description",
+      "default": "Customize your hamper with additional items"
+    },
+    {
+      "type": "header",
+      "content": "Product cards"
+    },
+    {
+      "type": "range",
+      "id": "card_min_width",
+      "min": 150,
+      "max": 300,
+      "step": 10,
+      "unit": "px",
+      "label": "Minimum card width",
+      "default": 220
+    },
+    {
+      "type": "range",
+      "id": "grid_gap",
+      "min": 12,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "label": "Grid gap",
+      "default": 24
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Card background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_border_color",
+      "label": "Card border",
+      "default": "#e0e0e0"
+    },
+    {
+      "type": "color",
+      "id": "card_hover_border_color",
+      "label": "Card hover border",
+      "default": "#121212"
+    },
+    {
+      "type": "color",
+      "id": "card_selected_border_color",
+      "label": "Selected card border",
+      "default": "#121212"
+    },
+    {
+      "type": "color",
+      "id": "card_selected_background",
+      "label": "Selected card background",
+      "default": "#f9f9f9"
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "label": "Card border radius",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "label": "Image border radius",
+      "default": 4
+    },
+    {
+      "type": "color",
+      "id": "checkmark_background",
+      "label": "Checkmark background",
+      "default": "#121212"
+    },
+    {
+      "type": "header",
+      "content": "Buttons"
+    },
+    {
+      "type": "color",
+      "id": "button_background",
+      "label": "Button background",
+      "default": "#121212"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_background",
+      "label": "Button hover background",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Button border radius",
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Summary"
+    },
+    {
+      "type": "color",
+      "id": "summary_background",
+      "label": "Summary background",
+      "default": "#f9f9f9"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "step_title_size",
+      "min": 20,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Step title size",
+      "default": 32
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hamper builder"
+    }
+  ]
+}
+{% endschema %}

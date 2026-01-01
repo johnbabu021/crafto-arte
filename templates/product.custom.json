@@ -1,0 +1,115 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "vendor": {
+          "type": "text",
+          "settings": {
+            "text": "{{ product.vendor }}",
+            "text_style": "uppercase"
+          }
+        },
+        "title": {
+          "type": "title",
+          "settings": {}
+        },
+        "price": {
+          "type": "price",
+          "settings": {}
+        },
+        "variant_picker": {
+          "type": "variant_picker",
+          "settings": {
+            "picker_type": "button",
+            "swatch_shape": "circle"
+          }
+        },
+        "custom_liquid_dRTVfy": {
+          "type": "custom_liquid",
+          "settings": {
+            "custom_liquid": "<div class=\"product-custom-message\" style=\"margin: 20px 0;\">\n  <label for=\"custom-message\" style=\"display: block; margin-bottom: 8px; font-weight: 500;\">\n    Customise <span style=\"color: red;\">*</span>\n  </label>\n  <input \n    type=\"text\" \n    id=\"custom-message\" \n    name=\"properties[Custom Message]\" \n    required \n    style=\"width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;\"\n    placeholder=\"Enter your custom message\"\n  />\n</div>\n\n<script>\n  document.addEventListener('DOMContentLoaded', function() {\n    const customInput = document.getElementById('custom-message');\n    const productForm = customInput.closest('form[action*=\"/cart/add\"]') || document.querySelector('form[action*=\"/cart/add\"]');\n    \n    if (productForm) {\n      productForm.addEventListener('submit', function(e) {\n        if (!customInput.value.trim()) {\n          e.preventDefault();\n          alert('Please enter a custom message');\n          customInput.focus();\n        }\n      });\n    }\n  });\n</script>"
+          }
+        },
+        "quantity_selector": {
+          "type": "quantity_selector",
+          "settings": {}
+        },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_dynamic_checkout": true,
+            "show_gift_card_recipient": true
+          }
+        },
+        "description": {
+          "type": "description",
+          "settings": {}
+        },
+        "share": {
+          "type": "share",
+          "settings": {
+            "share_label": "Share"
+          }
+        }
+      },
+      "block_order": [
+        "vendor",
+        "title",
+        "price",
+        "variant_picker",
+        "custom_liquid_dRTVfy",
+        "quantity_selector",
+        "buy_buttons",
+        "description",
+        "share"
+      ],
+      "settings": {
+        "enable_sticky_info": true,
+        "color_scheme": "scheme-1",
+        "media_size": "large",
+        "constrain_to_viewport": true,
+        "media_fit": "contain",
+        "gallery_layout": "stacked",
+        "mobile_thumbnails": "hide",
+        "media_position": "left",
+        "image_zoom": "lightbox",
+        "hide_variants": true,
+        "enable_video_looping": false,
+        "padding_top": 36,
+        "padding_bottom": 12
+      }
+    },
+    "related-products": {
+      "type": "related-products",
+      "settings": {
+        "heading": "You may also like",
+        "heading_size": "h2",
+        "products_to_show": 4,
+        "columns_desktop": 4,
+        "columns_mobile": "2",
+        "color_scheme": "scheme-1",
+        "image_ratio": "square",
+        "image_shape": "default",
+        "show_secondary_image": true,
+        "show_vendor": false,
+        "show_rating": false,
+        "padding_top": 36,
+        "padding_bottom": 28
+      }
+    }
+  },
+  "order": [
+    "main",
+    "related-products"
+  ]
+}
