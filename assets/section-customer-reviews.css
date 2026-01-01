@@ -1,0 +1,97 @@
+.customer-reviews {
+    position: relative;
+    overflow: hidden;
+}
+
+.customer-reviews__heading {
+    margin-top: 0;
+    margin-bottom: 4rem;
+    text-align: center;
+    font-family: var(--font-heading-family);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+}
+
+.customer-reviews__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+}
+
+@media screen and (min-width: 750px) {
+    .customer-reviews__grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.customer-review-card {
+    background: var(--card-bg, #ffffff);
+    padding: 3rem 2.5rem;
+    border-radius: 16px;
+    /* Premium Shadow */
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.08);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.customer-review-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.12);
+}
+
+.customer-review__stars {
+    font-size: 1.8rem;
+    margin-bottom: 2rem;
+    line-height: 1;
+}
+
+.customer-review__content {
+    flex-grow: 1;
+    margin-bottom: 2.5rem;
+    font-size: 1.6rem;
+    line-height: 1.6;
+    font-weight: 400;
+}
+
+/* Quote icon decorative element */
+.customer-review__content::before {
+    content: '“';
+    display: block;
+    font-size: 6rem;
+    line-height: 1;
+    font-family: serif;
+    opacity: 0.1;
+    margin-bottom: -3rem;
+    margin-left: -0.5rem;
+}
+
+.customer-review__footer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    padding-top: 2rem;
+}
+
+.customer-review__author {
+    font-weight: 600;
+    font-size: 1.4rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.customer-review__location {
+    font-size: 1.3rem;
+    opacity: 0.7;
+}
+
+/* Glassmorphism utility for light backgrounds */
+.customer-reviews[style*="background-color: #f"] .customer-review-card {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+}

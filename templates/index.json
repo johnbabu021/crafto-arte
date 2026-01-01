@@ -274,7 +274,56 @@
     "17660591753c180e53": {
       "type": "_blocks",
       "settings": {}
+    },
+    "customer-reviews": {
+      "type": "customer-reviews",
+      "blocks": {
+        "review-1": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "content": "<p>These hampers are properly curated and the quality is amazing!</p>",
+            "author_name": "Sarah J.",
+            "author_location": "Mumbai"
+          }
+        },
+        "review-2": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "content": "<p>Perfect gift for my anniversary. The personalization was spot on.</p>",
+            "author_name": "Rahul K.",
+            "author_location": "Bangalore"
+          }
+        },
+        "review-3": {
+          "type": "review",
+          "settings": {
+            "rating": 4,
+            "content": "<p>Great service and timely delivery. Highly recommended.</p>",
+            "author_name": "Priya M.",
+            "author_location": "Delhi"
+          }
+        }
+      },
+      "block_order": [
+        "review-1",
+        "review-2",
+        "review-3"
+      ],
+      "settings": {
+        "heading": "Customer Stories",
+        "heading_size": "h1",
+        "background_color": "#f8f9fa",
+        "card_background": "#ffffff",
+        "heading_color": "#1a1a1a",
+        "text_color": "#4a4a4a",
+        "star_color": "#ffc107",
+        "padding_top": 60,
+        "padding_bottom": 60
+      }
     }
+
   },
   "order": [
     "slideshow_bdDaMb",
@@ -283,6 +332,7 @@
     "featured_collection",
     "image_banner_gt9eP3",
     "17659912104235d4a4",
-    "17660591753c180e53"
+    "17660591753c180e53",
+    "customer-reviews"
   ]
 }
