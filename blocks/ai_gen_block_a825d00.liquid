@@ -618,6 +618,19 @@
 
     <div class="ai-hamper-summary-{{ ai_gen_id }}" data-summary></div>
 
+    <div style="margin-bottom: 24px;">
+      <label style="display: block; margin-bottom: 8px; color: {{ block.settings.text_color }}; font-weight: 600;"
+        >Customization Note</label
+      >
+      <textarea
+        id="ai-hamper-global-customization-{{ ai_gen_id }}"
+        class="ai-hamper-customization-input-{{ ai_gen_id }}"
+        style="display: block; width: 100%;"
+        placeholder="Add a message or customization note for your hamper (optional)"
+        rows="3"
+      ></textarea>
+    </div>
+
     <div class="ai-hamper-actions-{{ ai_gen_id }}">
       <button
         class="ai-hamper-btn-{{ ai_gen_id }} ai-hamper-btn-secondary-{{ ai_gen_id }}"
@@ -680,19 +693,8 @@
               }
               
               this.updateAddonSelection(card, quantity);
-              this.updateAddonSelection(card, quantity);
               this.updateSummary();
             });
-
-            const customInput = card.querySelector('[data-customization-input]');
-            if (customInput) {
-                customInput.addEventListener('input', (e) => {
-                    const quantity = parseInt(display.textContent);
-                    if (quantity > 0) {
-                        this.updateAddonSelection(card, quantity);
-                    }
-                });
-            }
             
             decreaseBtn.addEventListener('click', () => {
               let quantity = parseInt(display.textContent);
@@ -713,15 +715,6 @@
             card.addEventListener('click', () => {
               this.handleProductSelection(card, productType);
             });
-            
-            const customInput = card.querySelector('[data-customization-input]');
-             if (customInput) {
-                customInput.addEventListener('input', (e) => {
-                    if (card.classList.contains('selected')) {
-                        this.handleProductSelection(card, productType);
-                    }
-                });
-             }
           }
         });
 
@@ -759,8 +752,7 @@
           id: card.dataset.productId,
           variantId: card.dataset.variantId,
           title: card.dataset.productTitle,
-          price: parseInt(card.dataset.productPrice),
-          customization: card.querySelector('[data-customization-input]')?.value || ''
+          price: parseInt(card.dataset.productPrice)
         };
         
         const continueBtn = this.steps[this.currentStep - 1].querySelector('[data-continue-btn]');
@@ -786,7 +778,6 @@
             price: parseInt(card.dataset.productPrice),
             quantity: quantity,
             customization: card.querySelector('[data-customization-input]')?.value || ''
-          };
           };
           
           if (existingIndex > -1) {
@@ -902,15 +893,20 @@
         const items = [];
         
         const hamperId = Date.now().toString();
+        const globalCustomization = this.querySelector('#ai-hamper-global-customization-{{ ai_gen_id }}')?.value || '';
         
         if (this.selections.base) {
+          const properties = {
+            'Hamper ID': hamperId
+          };
+          if (globalCustomization) {
+            properties['Customization'] = globalCustomization;
+          }
+
           items.push({
             id: this.selections.base.variantId,
             quantity: 1,
-            properties: {
-              'Hamper ID': hamperId,
-              'Customization': this.selections.base.customization
-            }
+            properties: properties
           });
         }
         
@@ -919,8 +915,7 @@
             id: this.selections.package.variantId,
             quantity: 1,
             properties: {
-              'Hamper ID': hamperId,
-              'Customization': this.selections.package.customization
+              'Hamper ID': hamperId
             }
           });
         }
@@ -930,8 +925,7 @@
             id: addon.variantId,
             quantity: addon.quantity,
             properties: {
-              'Hamper ID': hamperId,
-              'Customization': addon.customization
+              'Hamper ID': hamperId
             }
           });
         });
