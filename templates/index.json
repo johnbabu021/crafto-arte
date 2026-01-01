@@ -322,6 +322,58 @@
         "padding_top": 60,
         "padding_bottom": 60
       }
+    },
+    "specialities": {
+      "type": "specialities",
+      "blocks": {
+        "feature-1": { "type": "feature", "settings": { "text": "10 Year Warranty" } },
+        "feature-2": { "type": "feature", "settings": { "text": "Direct Selling: Factory to Customer" } },
+        "feature-3": { "type": "feature", "settings": { "text": "66 Quality Checks" } },
+        "feature-4": { "type": "feature", "settings": { "text": "Kiln Dried" } }
+      },
+      "block_order": [ "feature-1", "feature-2", "feature-3", "feature-4" ]
+    },
+    "instagram-reels": {
+      "type": "instagram-reels",
+      "blocks": {
+        "reel-1": { "type": "reel", "settings": { "caption": "Behind the Scenes" } },
+        "reel-2": { "type": "reel", "settings": { "caption": "New Collection" } },
+        "reel-3": { "type": "reel", "settings": { "caption": "Customer Unboxing" } },
+        "reel-4": { "type": "reel", "settings": { "caption": "Workshop Vibes" } }
+      },
+      "block_order": [ "reel-1", "reel-2", "reel-3", "reel-4" ]
+    },
+    "faq_section": {
+      "type": "collapsible-content",
+      "blocks": {
+        "faq_1": { "type": "collapsible_row", "settings": { "heading": "Do you offer customization?", "row_content": "<p>Yes! We specialize in fully customizable hampers. You can use our 'Build Your Own Hamper' tool.</p>" } },
+        "faq_2": { "type": "collapsible_row", "settings": { "heading": "What is the delivery time?", "row_content": "<p>Standard delivery takes 3-5 business days.</p>" } },
+        "faq_3": { "type": "collapsible_row", "settings": { "heading": "Do you ship internationally?", "row_content": "<p>Currently, we ship within India.</p>" } }
+      },
+      "block_order": [ "faq_1", "faq_2", "faq_3" ],
+      "settings": {
+        "heading": "Frequently Asked Questions",
+        "heading_alignment": "center",
+        "layout": "row",
+        "color_scheme": "scheme-1",
+        "container_color_scheme": "scheme-2",
+        "open_first_collapsible_row": false
+      }
+    },
+    "newsletter_section": {
+      "type": "newsletter",
+      "blocks": {
+        "heading": { "type": "heading", "settings": { "heading": "Join the Crafto Arte Family", "heading_size": "h1" } },
+        "paragraph": { "type": "paragraph", "settings": { "text": "<p>Subscribe to get special offers.</p>" } },
+        "email_form": { "type": "email_form", "settings": {} }
+      },
+      "block_order": [ "heading", "paragraph", "email_form" ],
+      "settings": {
+        "color_scheme": "scheme-2",
+        "full_width": true,
+        "padding_top": 40,
+        "padding_bottom": 52
+      }
     }
 
   },
@@ -331,8 +383,12 @@
     "image_with_text_VNJewp",
     "featured_collection",
     "image_banner_gt9eP3",
+    "specialities",
     "17659912104235d4a4",
     "17660591753c180e53",
-    "customer-reviews"
+    "instagram-reels",
+    "customer-reviews",
+    "faq_section",
+    "newsletter_section"
   ]
 }
