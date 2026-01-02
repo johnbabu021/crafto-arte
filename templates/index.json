@@ -207,12 +207,13 @@
         "heading_F9z7ha",
         "text_VnHmkH"
       ],
+      "custom_css": [],
       "name": "t:sections.image-banner.presets.name",
       "settings": {
         "image": "shopify://shop_images/Valentines_Day_Banner_Landscape.png",
         "image_overlay_opacity": 0,
-        "image_height": "medium",
-        "image_behavior": "none",
+        "image_height": "large",
+        "image_behavior": "fixed",
         "desktop_content_position": "bottom-left",
         "desktop_content_alignment": "left",
         "show_text_box": false,
@@ -220,6 +221,55 @@
         "stack_images_on_mobile": true,
         "mobile_content_alignment": "center",
         "show_text_below": true
+      }
+    },
+    "specialities": {
+      "type": "specialities",
+      "blocks": {
+        "feature-1": {
+          "type": "feature",
+          "settings": {
+            "svg_code": "",
+            "text": "10 Year Warranty"
+          }
+        },
+        "feature-2": {
+          "type": "feature",
+          "settings": {
+            "svg_code": "",
+            "text": "Direct Selling: Factory to Customer"
+          }
+        },
+        "feature-3": {
+          "type": "feature",
+          "settings": {
+            "svg_code": "",
+            "text": "66 Quality Checks"
+          }
+        },
+        "feature-4": {
+          "type": "feature",
+          "settings": {
+            "svg_code": "",
+            "text": "Kiln Dried"
+          }
+        }
+      },
+      "block_order": [
+        "feature-1",
+        "feature-2",
+        "feature-3",
+        "feature-4"
+      ],
+      "settings": {
+        "heading": "Why Choose Us",
+        "heading_size": "h1",
+        "card_background": "#ffffff",
+        "border_color": "#e6e6e6",
+        "text_color": "#333333",
+        "icon_color": "#333333",
+        "padding_top": 36,
+        "padding_bottom": 36
       }
     },
     "17659912104235d4a4": {
@@ -275,6 +325,48 @@
       "type": "_blocks",
       "settings": {}
     },
+    "instagram-reels": {
+      "type": "instagram-reels",
+      "blocks": {
+        "reel-1": {
+          "type": "reel",
+          "settings": {
+            "caption": "Behind the Scenes"
+          }
+        },
+        "reel-2": {
+          "type": "reel",
+          "settings": {
+            "caption": "New Collection"
+          }
+        },
+        "reel-3": {
+          "type": "reel",
+          "settings": {
+            "caption": "Customer Unboxing"
+          }
+        },
+        "reel-4": {
+          "type": "reel",
+          "settings": {
+            "caption": "Workshop Vibes"
+          }
+        }
+      },
+      "block_order": [
+        "reel-1",
+        "reel-2",
+        "reel-3",
+        "reel-4"
+      ],
+      "settings": {
+        "heading": "Latest on Instagram",
+        "instagram_handle": "crafto_arte",
+        "heading_size": "h1",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
     "customer-reviews": {
       "type": "customer-reviews",
       "blocks": {
@@ -323,51 +415,83 @@
         "padding_bottom": 60
       }
     },
-    "specialities": {
-      "type": "specialities",
-      "blocks": {
-        "feature-1": { "type": "feature", "settings": { "text": "10 Year Warranty" } },
-        "feature-2": { "type": "feature", "settings": { "text": "Direct Selling: Factory to Customer" } },
-        "feature-3": { "type": "feature", "settings": { "text": "66 Quality Checks" } },
-        "feature-4": { "type": "feature", "settings": { "text": "Kiln Dried" } }
-      },
-      "block_order": [ "feature-1", "feature-2", "feature-3", "feature-4" ]
-    },
-    "instagram-reels": {
-      "type": "instagram-reels",
-      "blocks": {
-        "reel-1": { "type": "reel", "settings": { "caption": "Behind the Scenes" } },
-        "reel-2": { "type": "reel", "settings": { "caption": "New Collection" } },
-        "reel-3": { "type": "reel", "settings": { "caption": "Customer Unboxing" } },
-        "reel-4": { "type": "reel", "settings": { "caption": "Workshop Vibes" } }
-      },
-      "block_order": [ "reel-1", "reel-2", "reel-3", "reel-4" ]
-    },
     "faq_section": {
       "type": "collapsible-content",
       "blocks": {
-        "faq_1": { "type": "collapsible_row", "settings": { "heading": "Do you offer customization?", "row_content": "<p>Yes! We specialize in fully customizable hampers. You can use our 'Build Your Own Hamper' tool.</p>" } },
-        "faq_2": { "type": "collapsible_row", "settings": { "heading": "What is the delivery time?", "row_content": "<p>Standard delivery takes 3-5 business days.</p>" } },
-        "faq_3": { "type": "collapsible_row", "settings": { "heading": "Do you ship internationally?", "row_content": "<p>Currently, we ship within India.</p>" } }
+        "faq_1": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Do you offer customization?",
+            "icon": "check_mark",
+            "row_content": "<p>Yes! We specialize in fully customizable hampers. You can use our 'Build Your Own Hamper' tool.</p>",
+            "page": ""
+          }
+        },
+        "faq_2": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "What is the delivery time?",
+            "icon": "check_mark",
+            "row_content": "<p>Standard delivery takes 3-5 business days.</p>",
+            "page": ""
+          }
+        },
+        "faq_3": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Do you ship internationally?",
+            "icon": "check_mark",
+            "row_content": "<p>Currently, we ship within India.</p>",
+            "page": ""
+          }
+        }
       },
-      "block_order": [ "faq_1", "faq_2", "faq_3" ],
+      "block_order": [
+        "faq_1",
+        "faq_2",
+        "faq_3"
+      ],
       "settings": {
+        "caption": "",
         "heading": "Frequently Asked Questions",
+        "heading_size": "h1",
         "heading_alignment": "center",
         "layout": "row",
-        "color_scheme": "scheme-1",
         "container_color_scheme": "scheme-2",
-        "open_first_collapsible_row": false
+        "color_scheme": "scheme-1",
+        "open_first_collapsible_row": false,
+        "image_ratio": "adapt",
+        "desktop_layout": "image_second",
+        "padding_top": 36,
+        "padding_bottom": 36
       }
     },
     "newsletter_section": {
       "type": "newsletter",
       "blocks": {
-        "heading": { "type": "heading", "settings": { "heading": "Join the Crafto Arte Family", "heading_size": "h1" } },
-        "paragraph": { "type": "paragraph", "settings": { "text": "<p>Subscribe to get special offers.</p>" } },
-        "email_form": { "type": "email_form", "settings": {} }
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "Join the Crafto Arte Family",
+            "heading_size": "h1"
+          }
+        },
+        "paragraph": {
+          "type": "paragraph",
+          "settings": {
+            "text": "<p>Subscribe to get special offers.</p>"
+          }
+        },
+        "email_form": {
+          "type": "email_form",
+          "settings": {}
+        }
       },
-      "block_order": [ "heading", "paragraph", "email_form" ],
+      "block_order": [
+        "heading",
+        "paragraph",
+        "email_form"
+      ],
       "settings": {
         "color_scheme": "scheme-2",
         "full_width": true,
@@ -375,7 +499,6 @@
         "padding_bottom": 52
       }
     }
-
   },
   "order": [
     "slideshow_bdDaMb",
