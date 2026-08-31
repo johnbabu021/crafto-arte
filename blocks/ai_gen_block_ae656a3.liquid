@@ -317,7 +317,7 @@
           {% if block.settings.newsletter_text != blank %}
             <p class="ai-footer-newsletter-text-{{ ai_gen_id }}">{{ block.settings.newsletter_text }}</p>
           {% endif %}
-          {%- form 'customer', class: 'ai-footer-newsletter-form-' | append: ai_gen_id -%}
+          {%- form ai_gen_id -%}
             <input type="hidden" name="contact[tags]" value="newsletter">
             <input
               type="email"
@@ -1183,3 +1183,14 @@
   ]
 }
 {% endschema %}
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{%- form 'customer', class: 'ai-footer-newsletter-form-' | append: ai_gen_id
+    -%}"
+  to: "{%- form ai_gen_id -%}"
+  position: 9017..9039
+{% endcomment %}
